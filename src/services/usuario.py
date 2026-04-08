@@ -5,6 +5,11 @@ from src.models.usuario import Usuario
 from src.schemas.usuario import UsuarioUpdate
 
 
+def buscar_usuario(session: Session, id: str) -> Usuario:
+  usuario = read_usuario(session, id)
+  if not usuario:
+    raise ValueError('Usuario no encontrado')
+  return usuario
 
 
 def actualizar_usuario(
