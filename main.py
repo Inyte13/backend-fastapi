@@ -15,6 +15,10 @@ async def lifespan(app: FastAPI):
   # Al apagar puede ejecutar código como (cleanup, cerrar conexiones)
 
 
+# Instancia principal de FastAPI con lifespan
+app = FastAPI(
+  lifespan=lifespan, title='OAuth App', version='1.0.0', openapi_version='3.0.0'
+)
 
 
 if __name__ == '__main__':
