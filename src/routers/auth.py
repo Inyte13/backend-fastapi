@@ -11,8 +11,8 @@ from src.services.auth import loguear_usuario, registrar_usuario
 auth_router = APIRouter(tags=['Auth'], prefix='/auth')
 
 
-@auth_router.post('/login', status_code=201, response_model=UsuarioRead)
-async def login(session: SessionDep, usuario: UsuarioCreate):
+@auth_router.post('/register', status_code=201, response_model=UsuarioRead)
+async def register(session: SessionDep, usuario: UsuarioCreate):
   try:
     return await registrar_usuario(session, usuario)
   except IntegrityError:
