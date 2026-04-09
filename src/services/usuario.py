@@ -3,7 +3,6 @@ from sqlmodel import Session
 from src.crud.usuario import (
   delete_usuario,
   read_usuario,
-  read_usuario_by_username,
   update_usuario,
 )
 from src.models.usuario import Usuario
