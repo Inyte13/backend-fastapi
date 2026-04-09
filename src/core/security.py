@@ -41,3 +41,25 @@ def crear_token(data: dict) -> str:
   return jwt.encode(payload, settings.jwt_secret, algorithm='HS256')
 
 
+def get_usuario(
+  session: SessionDep, access_token: str | None = Cookie(default=None)
+) -> Usuario:
+  if not access_token:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+  try:
+    payload = jwt.decode(
+      access_token, settings.jwt_secret, algorithms=['HS256']
+    )
+    id = payload.get('id')
+
+    if not id:
+      raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+  except JWTError:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+  usuario = read_usuario(session, id)
+  if not usuario:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+  return usuario
