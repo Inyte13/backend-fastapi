@@ -19,3 +19,22 @@ async def login(session: SessionDep, usuario: UsuarioCreate):
     raise HTTPException(
       status_code=status.HTTP_400_BAD_REQUEST, detail='El username ya existe'
     )
+# Declaramos explicitamente response para setear la cookie
+@auth_router.post('/login', status_code=201, response_model=UsuarioRead)
+async def login(
+  session: SessionDep, usuario: UsuarioCreate, response: Response
+):
+  try:
+    usuario_bd = await loguear_usuario(session, usuario)
+    token = crear_token({'id': usuario_bd.id})
+    response.set_cookie(
+      key='access_token',
+      value=token,
+      httponly=True,
+      secure=settings.production,
+      max_age=settings.access_token_duration_minutes * 60,
+      samesite='strict',  # Solo se puede acceder en el mismo dominio
+    )
+    return usuario_bd
+  except ValueError as e:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
