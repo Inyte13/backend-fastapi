@@ -27,11 +27,21 @@ async def hashear_async(password: str) -> str:
 
 def verificar(password: str, hashed: str) -> bool:
   return bcrypt.checkpw(password.encode(), hashed.encode())
+
+
 async def verificar_async(password: str, hashed: str) -> bool:
   return await asyncio.to_thread(verificar, password, hashed)
+
+
 def crear_token(data: dict) -> str:
   payload = data.copy()
   payload['exp'] = datetime.now(timezone.utc) + timedelta(
     minutes=settings.access_token_duration_minutes
   )
   return jwt.encode(payload, settings.jwt_secret, algorithm='HS256')
+
+
+
+
+
+

@@ -19,6 +19,8 @@ async def login(session: SessionDep, usuario: UsuarioCreate):
     raise HTTPException(
       status_code=status.HTTP_400_BAD_REQUEST, detail='El username ya existe'
     )
+
+
 # Declaramos explicitamente response para setear la cookie
 @auth_router.post('/login', status_code=201, response_model=UsuarioRead)
 async def login(
