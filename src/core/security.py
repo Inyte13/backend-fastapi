@@ -41,7 +41,3 @@ def crear_token(data: dict) -> str:
   return jwt.encode(payload, settings.jwt_secret, algorithm='HS256')
 
 
-
-
-
-
