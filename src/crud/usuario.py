@@ -17,6 +17,9 @@ def read_usuario(session: Session, id: str) -> Usuario | None:
   return session.get(Usuario, id)
 
 
+def read_usuario_by_username(session: Session, username: str) -> Usuario | None:
+  statement = select(Usuario).where(Usuario.username == username)
+  return session.exec(statement).first()
 def read_usuarios(session: Session) -> Sequence[Usuario]:
   statement = select(Usuario).order_by(col(Usuario.id))
   return session.exec(statement).all()
