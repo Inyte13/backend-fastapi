@@ -3,10 +3,11 @@ from sqlalchemy.exc import IntegrityError
 from starlette import status
 
 from src.core.database import SessionDep
-from src.core.security import crear_token
+from src.core.security import crear_access_token
 from src.core.settings import settings
 from src.schemas.usuario import UsuarioCreate, UsuarioRead
 from src.services.auth import loguear_usuario, registrar_usuario
+from src.services.refresh_token import crear_refresh_token
 
 auth_router = APIRouter(tags=['Auth'], prefix='/auth')
 
@@ -28,13 +29,20 @@ async def login(
 ):
   try:
     usuario_bd = await loguear_usuario(session, usuario)
-    token = crear_token({'id': usuario_bd.id})
+    access_token = crear_access_token({'id': usuario_bd.id})
+    refresh_token = crear_refresh_token(session, usuario_bd.id)
     response.set_cookie(
       key='access_token',
-      value=token,
+      value=access_token,
       httponly=True,
       secure=settings.production,
       max_age=settings.access_token_duration_minutes * 60,
+      samesite='strict',  # Solo se puede acceder en el mismo dominio
+    )
+    response.set_cookie(
+      key='refresh_token',
+      value=refresh_token,
+      max_age=settings.refresh_token_duration_days * 86400,
       samesite='strict',  # Solo se puede acceder en el mismo dominio
     )
     return usuario_bd

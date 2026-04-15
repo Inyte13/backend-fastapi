@@ -8,6 +8,7 @@ class Settings(BaseSettings):
   jwt_secret: str
   production: bool = False
   access_token_duration_minutes: int
+  refresh_token_duration_days: int
 
 
 settings = Settings()  # type: ignore
