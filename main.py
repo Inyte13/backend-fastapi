@@ -21,6 +21,7 @@ app = FastAPI(
   lifespan=lifespan, title='OAuth App', version='1.0.0', openapi_version='3.0.0'
 )
 
+# Cada vez que que recibe algo, comprueba que tenga el access token
 app.include_router(usuario_router, dependencies=[Depends(get_usuario)])
 app.include_router(auth_router)
 
