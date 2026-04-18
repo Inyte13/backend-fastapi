@@ -11,6 +11,14 @@ from src.crud.refresh_token import (
 from src.models.refresh_token import RefreshToken
 
 
+def crear_refresh_token(session: Session, id_usuario: str) -> RefreshToken:
+  refresh_token = read_refresh_token_by_usuario(session, id_usuario)
+  if refresh_token:
+    delete_refresh_token(session, refresh_token)
+  new_refresh_token = create_refresh_token(session, id_usuario)
+  return new_refresh_token
+
+
 def buscar_refresh_token(session: Session, id: str) -> RefreshToken:
   refresh_token = read_refresh_token(session, id)
   if not refresh_token:
