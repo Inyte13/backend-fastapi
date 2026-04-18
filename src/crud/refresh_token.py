@@ -7,7 +7,7 @@ from src.models.refresh_token import RefreshToken
 
 
 def create_refresh_token(session: Session, id_usuario: str) -> RefreshToken:
-  expires_at = datetime.now(timezone.utc) + timedelta(
+  expires_at = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(
     days=settings.refresh_token_duration_days
   )
   refresh_token = RefreshToken(id_usuario=id_usuario, expires_at=expires_at)

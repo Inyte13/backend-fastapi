@@ -23,7 +23,8 @@ def buscar_refresh_token(session: Session, id: str) -> RefreshToken:
   refresh_token = read_refresh_token(session, id)
   if not refresh_token:
     raise ValueError('Refresh no encontrado')
-  if refresh_token.expires_at < datetime.now(timezone.utc):
+  # .replace(tzinfo=None) solo para sqlite que no tiene datetime
+  if refresh_token.expires_at < datetime.now(timezone.utc).replace(tzinfo=None):
     raise ValueError('Refresh Token expirado')
   return refresh_token
 
