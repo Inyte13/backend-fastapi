@@ -38,3 +38,33 @@ async def login(
     return usuario_bd
   except ValueError as e:
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
+
+
+# Declaramos explicitamente response para setear la cookie
+@auth_router.post('/refresh')
+def refresh(
+  session: SessionDep,
+  response: Response,
+  id_refresh_token: str | None = Cookie(default=None),
+):
+  if not id_refresh_token:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+  try:
+    refresh_token = buscar_refresh_token(session, id_refresh_token)
+    new_access_token = crear_access_token({'id': refresh_token.id_usuario})
+    new_refresh_token = crear_refresh_token(session, refresh_token.id_usuario)
+    set_auth_cookies(response, new_access_token, new_refresh_token)
+  except ValueError as e:
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
+
+
+@auth_router.post('/logout')
+def logout(
+  session: SessionDep,
+  response: Response,
+  id_refresh_token: str | None = Cookie(default=None),
+):
+  if id_refresh_token:
+    eliminar_refresh_token(session, id_refresh_token)
+  response.delete_cookie('access_token')
+  response.delete_cookie('id_refresh_token')
