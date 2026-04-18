@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 from src.core.settings import settings
 from src.core.database import crear_tablas_y_db
-from src.core.security import get_usuario
+from src.core.auth import get_usuario
 from src.routers.auth import auth_router
 from src.routers.usuario import usuario_router
 

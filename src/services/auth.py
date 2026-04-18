@@ -1,6 +1,6 @@
 from sqlmodel import Session
 
-from src.core.security import hashear_async, verificar_async
+from src.core.auth import hashear_async, verificar_async
 from src.crud.usuario import create_usuario, read_usuario_by_username
 from src.models.usuario import Usuario
 from src.schemas.usuario import UsuarioCreate

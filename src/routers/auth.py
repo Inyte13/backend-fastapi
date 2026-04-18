@@ -1,13 +1,16 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, Cookie, HTTPException, Response
 from sqlalchemy.exc import IntegrityError
 from starlette import status
 
+from src.core.auth import crear_access_token, set_auth_cookies
 from src.core.database import SessionDep
-from src.core.security import crear_access_token
-from src.core.settings import settings
 from src.schemas.usuario import UsuarioCreate, UsuarioRead
 from src.services.auth import loguear_usuario, registrar_usuario
-from src.services.refresh_token import crear_refresh_token
+from src.services.refresh_token import (
+  buscar_refresh_token,
+  crear_refresh_token,
+  eliminar_refresh_token,
+)
 
 auth_router = APIRouter(tags=['Auth'], prefix='/auth')
 
