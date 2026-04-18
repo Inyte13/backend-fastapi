@@ -34,20 +34,7 @@ async def login(
     usuario_bd = await loguear_usuario(session, usuario)
     access_token = crear_access_token({'id': usuario_bd.id})
     refresh_token = crear_refresh_token(session, usuario_bd.id)
-    response.set_cookie(
-      key='access_token',
-      value=access_token,
-      httponly=True,
-      secure=settings.production,
-      max_age=settings.access_token_duration_minutes * 60,
-      samesite='strict',  # Solo se puede acceder en el mismo dominio
-    )
-    response.set_cookie(
-      key='refresh_token',
-      value=refresh_token,
-      max_age=settings.refresh_token_duration_days * 86400,
-      samesite='strict',  # Solo se puede acceder en el mismo dominio
-    )
+    set_auth_cookies(response, access_token, refresh_token)
     return usuario_bd
   except ValueError as e:
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
