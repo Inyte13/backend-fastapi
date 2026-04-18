@@ -2,13 +2,14 @@ import asyncio
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
-from fastapi import Cookie, HTTPException
+from fastapi import Cookie, HTTPException, Response
 from jose import JWTError, jwt
 from starlette import status
 
 from src.core.database import SessionDep
 from src.core.settings import settings
 from src.crud.usuario import read_usuario
+from src.models.refresh_token import RefreshToken
 from src.models.usuario import Usuario
 
 
@@ -38,6 +39,7 @@ def crear_access_token(data: dict) -> str:
   payload['exp'] = datetime.now(timezone.utc) + timedelta(
     minutes=settings.access_token_duration_minutes
   )
+  # Crea directamente todo el token, no solo la signature
   return jwt.encode(payload, settings.jwt_secret, algorithm='HS256')
 
 
@@ -63,3 +65,22 @@ def get_usuario(
   if not usuario:
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
   return usuario
+
+
+def set_auth_cookies(
+  response: Response, access_token: str, refresh_token: RefreshToken
+):
+  response.set_cookie(
+    key='access_token',
+    value=access_token,
+    httponly=True,
+    secure=settings.production,
+    max_age=settings.access_token_duration_minutes * 60,
+    samesite='strict',  # Solo se puede acceder en el mismo dominio
+  )
+  response.set_cookie(
+    key='id_refresh_token',
+    value=refresh_token.id,
+    max_age=settings.refresh_token_duration_days * 86400,
+    samesite='strict',  # Solo se puede acceder en el mismo dominio
+  )
