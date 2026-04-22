@@ -27,6 +27,7 @@ venv/
 env/
 .venv/
 .envrc
+.agents/
 
 .vscode/*
 Thumbs.db
