@@ -23,7 +23,6 @@ PyYAML==6.0.3
 rsa==4.9.1
 six==1.17.0
 SQLAlchemy==2.0.49
-sqlmodel==0.0.38
 starlette==1.0.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0
