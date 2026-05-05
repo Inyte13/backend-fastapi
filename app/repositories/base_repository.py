@@ -1,11 +1,15 @@
 import uuid
 from typing import Generic, Sequence, TypeVar
+
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 Modelo = TypeVar('Modelo')
 ModeloCreate = TypeVar('ModeloCreate', bound=BaseModel)
 ModeloUpdate = TypeVar('ModeloUpdate', bound=BaseModel)
+
+
 # En los params tenemos:
 # Modelo SQLAlchemy
 # Schemas Pydantic

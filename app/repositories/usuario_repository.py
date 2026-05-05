@@ -3,6 +3,8 @@ from app.repositories.base_repository import BaseRepository
 from app.schemas.usuario import UsuarioCreate, UsuarioUpdate
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+
 class UsuarioRepository(BaseRepository[Usuario, UsuarioCreate, UsuarioUpdate]):
   async def read_by_username(
     self, db: AsyncSession, username: str
